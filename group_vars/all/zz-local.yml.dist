@@ -1,0 +1,9 @@
+# Copy this file from "zz-local.yml.dist" to "zz-local.yml" and edit only "zz-local.yml" file.
+# This file name should be last in files list to override repository variables.
+
+# Specify SSH user as "-e username", or "ANSIBLE_REMOTE_USER" environment variable, or here.
+# Can't use variable here (https://github.com/ansible-collections/ansible.posix/issues/275).
+#ansible_user:
+
+# Zabbix API key (/zabbix.php?action=token.list)
+#zabbix_auth_key:

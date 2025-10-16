@@ -1,0 +1,5 @@
+- name: Dev host
+  hosts: dev_host_node
+  roles:
+  - danted-socks
+  

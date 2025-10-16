@@ -1,0 +1,4 @@
+- name: Перезапустить danted
+  systemd:
+    name: danted
+    state: restarted

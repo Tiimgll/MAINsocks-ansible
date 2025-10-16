@@ -1,0 +1,5 @@
+users:
+  - name: testuser
+    password: "{{ vault_testuser_pass }}"
+  - name: tiimgll
+    password: "{{ vault_tlevin_pass }}"
