@@ -1,9 +1,13 @@
 logoutput: stderr
 
-internal: 0.0.0.0 port = {{ danted_listen_port | default(1080) }}
-external: {{ danted_external_ip | default(ansible_default_ipv4.address) }}
+internal: 0.0.0.0 port = {{ danted_listen_port }}
+{% if danted_external_ip is defined %}
+external: {{ danted_external_ip }}
+{% else %}
+external: 0.0.0.0
+{% endif %}
 
-user.privileged: root
+user.privileged: proxy
 user.unprivileged: nobody
 user.libwrap: nobody
 
@@ -11,12 +15,12 @@ socksmethod: pam.username
 clientmethod: none
 
 client pass {
-  from: 0.0.0.0/0 to: 0.0.0.0/0
+  from: 0/0 to: 0/0
   log: connect disconnect error
 }
 
 socks pass {
-  from: 0.0.0.0/0 to: 0.0.0.0/0
-  protocol: tcp udp
+  from: 0/0 to: 0/0
+  socksmethod: pam.username
   log: connect disconnect error
 }

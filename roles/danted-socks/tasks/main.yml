@@ -3,18 +3,12 @@
     update_cache: yes
   when: ansible_facts['os_family'] == 'Debian'
 
-- name: Устанавливаем пакеты dante-server и PAM модули
+- name: Устанавливаем нужные пакеты
   apt:
     name:
       - dante-server
-      - libpam-modules
+      - libpam-pwdfile
     state: present
-
-- name: Создаём каталог для логов
-  file:
-    path: /var/log
-    state: directory
-    mode: '0755'
 
 - name: Копируем конфиг Dante
   template:
@@ -25,7 +19,7 @@
     mode: '0644'
   notify: Перезапустить danted
 
-- name: Копируем PAM-конфиг для Dante
+- name: Копируем PAM-конфиг для sockd
   template:
     src: pam_sockd.j2
     dest: /etc/pam.d/sockd
@@ -34,17 +28,20 @@
     mode: '0644'
   notify: Перезапустить danted
 
-- name: Создаём пользователей для SOCKS5
-  ansible.builtin.user:
-    name: "{{ item.name }}"
-    password: "{{ item.password }}"
-    shell: /usr/sbin/nologin
-    create_home: no
-  loop: "{{ users }}"
+- name: Создаём /etc/danted.passwd с пользователями
+  copy:
+    dest: /etc/danted.passwd
+    content: |
+      {% for user in users %}
+      {{ user.name }}:{{ user.password }}
+      {% endfor %}
+    owner: proxy
+    group: proxy
+    mode: '0600'
+  notify: Перезапустить danted
 
 - name: Включаем и запускаем danted
   systemd:
     name: danted
     enabled: yes
     state: started
-  notify: Перезапустить danted

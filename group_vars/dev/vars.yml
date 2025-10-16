@@ -3,3 +3,6 @@ users:
     password: "{{ vault_testuser_pass }}"
   - name: tiimgll
     password: "{{ vault_tlevin_pass }}"
+
+danted_listen_port: 1080
+danted_external_ip: "{{ vault_ip }}"
